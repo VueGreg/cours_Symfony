@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DefaultOffersController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .offers {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap : wrap;
+        gap : 2rem;
+        width: 80vw;
+        margin: 5rem auto;
+    }
+    .list {
+        list-style: none;
+    }
+    .container-offer {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: 1rem;
+        border: solid 2px green;
+        padding: 1rem 2rem;
+    }
+    .tag {
+        color: green;
+    }
+    .actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .actions a {
+        text-decoration: none;
+        border : solid 1px blue;
+        padding: 0.5rem 1rem;
+    }
+
+    .edit {
+        background-color: lightblue;
+    }
+
+    .delete {
+        background-color: rgb(219, 30, 71);
+        color: white;
+    }
+
+</style>
+
+<div class="example-wrapper">
+    <h1>Hello !✅</h1>
+
+    <a href="{{ path('app_add_offer') }}">Add an offer</a>
+
+    Watch your offers:
+    <ul class="offers">
+        {% for offer in offers %}
+            <li class="list">
+                <div class='container-offer'>
+                    <div class="offer">
+                        {{ offer.title }} - 
+                        {{ offer.city }} - 
+                        <span class="tag">#{{ offer.tag }}</span>
+                    </div>
+                    <div class='actions'>
+                        <a class='edit' href="{{ path('app_edit_offer', { 'id': offer.id }) }}">Edit</a>
+                        <a class='delete' href="{{ path('app_delete_offer', { 'id': offer.id }) }}">Delete</a>
+                    </div>
+                <div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

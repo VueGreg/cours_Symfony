@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    <h1> You Apply to {{ offer.title }}</h1>
+    <div class="container">
+        <h2>Apply an offer</h2>
+        {{ form(form)}}
+    </div> 
+
+{% endblock %}
