@@ -10,8 +10,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
 
-#[Route('/api', name: 'list', methods: ['GET'])]
+#[Route('/api', name: 'list')]
+
+#[OA\Response(
+    response: 200,
+    description: 'Returns the api',
+    content: new OA\JsonContent(
+        type: 'array',
+        items: new OA\Items(ref: new Model(type: Offer::class, groups: ['full']))
+    )
+)]
+
 final class ApiController extends AbstractController
 {
 
