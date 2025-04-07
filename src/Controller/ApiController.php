@@ -73,6 +73,20 @@ final class ApiController extends AbstractController
 
     }
 
+    #[Route('/offers', name: 'post_offer', methods:['POST'])]
+    public function postOffer(Request $request, EntityManagerInterface $entity_manager, SerializerInterface $serializer): JsonResponse
+    {
+
+        $offer = $serializer->deserialize($request->getContent(), Offer::class, 'json');
+        $user = $this->getUser();
+        $offer->setRecruiter($user);
+        $entity_manager->persist($offer);
+        $entity_manager->flush();
+
+        return new JsonResponse(['message' => 'offer created !'], 201);
+
+    }
+
     #[Route('/offer/{id}', name: 'delete_offer', methods:['DELETE'])]
     public function deleteOffer(Offer $offer, EntityManagerInterface $entity_manager): JsonResponse
     {
