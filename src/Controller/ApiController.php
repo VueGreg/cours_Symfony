@@ -188,14 +188,18 @@ final class ApiController extends AbstractController
     #[Route('/candidacies', name: 'post_candidacies', methods:['POST'])]
     #[OA\RequestBody(
         required: true,
-        content: new OA\JsonContent(
-            required: ['message', 'file'],
-            properties: [
-                new OA\Property(property: 'message', type: 'string', description: 'Message of the candidacy'),
-                new OA\Property(property: 'file', type: 'file', description: 'CV of the candidacy'),
-            ]
+        content: new OA\MediaType(
+            mediaType: 'multipart/form-data',
+            schema: new OA\Schema(
+                required: ['message', 'file'],
+                properties: [
+                    new OA\Property(property: 'message', type: 'string', description: 'Message of the candidacy'),
+                    new OA\Property(property: 'file', type: 'string', format: 'binary', description: 'CV of the candidacy'),
+                ]
+            )
         )
-    )] function postCandidacies(Request $request, EntityManagerInterface $entity_manager): JsonResponse
+    )]
+    function postCandidacies(Request $request, EntityManagerInterface $entity_manager): JsonResponse
     {
 
         $candidacy = new Candidacy();
