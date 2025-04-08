@@ -3,13 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Candidacy;
-use App\Entity\Offer;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class CandidacyType extends AbstractType
 {
@@ -17,7 +16,21 @@ class CandidacyType extends AbstractType
     {
         $builder
             ->add('message')
-            ->add('file')
+            ->add('file', FileType::class, [
+                'label' => 'CV (PDF file)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeType' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                        ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ]
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Save',
                 'attr' => ['class' => 'btn btn-primary']

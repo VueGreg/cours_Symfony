@@ -47,7 +47,7 @@ final class ApiController extends AbstractController
 
     #[OA\Tag(name: 'Offers')]
     #[Route('/offers/{tag}', name: 'list_offers_tags', methods:['GET'])]
-    public function getOffersByTag(EntityManagerInterface $entity_manager, SerializerInterface $serializer): JsonResponse
+    public function getOffersByTag(EntityManagerInterface $entity_manager, string $tag): JsonResponse
     {
         if ($tag !== "") {
             $offers = $entity_manager->getRepository(Offer::class)->findByTag($tag);
@@ -55,7 +55,7 @@ final class ApiController extends AbstractController
             $offers = $entity_manager->getRepository(Offer::class)->findAll();
         }
 
-        return new JsonResponse($data, 200, [], true);
+        return new JsonResponse($offers, 200, [], true);
 
     }   
 
