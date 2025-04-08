@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use ApiPlatform\OpenApi\Model\Response;
 use App\Entity\Candidacy;
 use App\Entity\Offer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -11,8 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
-use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 #[Route('/api', name: 'list')]
 
@@ -199,7 +201,23 @@ final class ApiController extends AbstractController
         $candidacy = new Candidacy();
         $message = $request->request->get('message');
         $candidacy->setMessage($message);
-        $candidacy->setOffer($entity_manager->getRepositoty(Offer::class)->find(11));
+        $candidacy->setOffer($entity_manager->getRepository(Offer::class)->find(11));
+
+        $file = $request->files->get('file');
+
+        if (!$file) {
+            return new JsonResponse(['error' => 'Aucun fichier reçu'], HttpFoundationResponse::HTTP_BAD_REQUEST);
+        }
+
+        $uploadDir = $this->getParameter('kernel.project_dir') . 'public/uploads/cv';
+
+        $newFileName = uniqid() . '.' . $file->guessExtention();
+
+        try {
+            $file->move($uploadDir, $newFileName);
+        } catch (FileException $e) {
+            return new JsonResponse(['error' => 'Erreur lors de l\'upload'], HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         $entity_manager->persist($candidacy);
         $entity_manager->flush();
