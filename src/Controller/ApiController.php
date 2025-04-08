@@ -189,13 +189,13 @@ final class ApiController extends AbstractController
     #[OA\RequestBody(
         required: true,
         content: new OA\JsonContent(
-            required: ['message'],
+            required: ['message', 'file'],
             properties: [
-                new OA\Property(property: 'message', type: 'string', description: 'Message of the candidacy')
+                new OA\Property(property: 'message', type: 'string', description: 'Message of the candidacy'),
+                new OA\Property(property: 'file', type: 'file', description: 'CV of the candidacy'),
             ]
         )
-    )]
-    public function postCandidacies(Request $request, EntityManagerInterface $entity_manager): JsonResponse
+    )] function postCandidacies(Request $request, EntityManagerInterface $entity_manager): JsonResponse
     {
 
         $candidacy = new Candidacy();
@@ -219,6 +219,7 @@ final class ApiController extends AbstractController
             return new JsonResponse(['error' => 'Erreur lors de l\'upload'], HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
 
+        $candidacy->setFile($newFileName);
         $entity_manager->persist($candidacy);
         $entity_manager->flush();
 
