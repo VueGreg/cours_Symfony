@@ -25,6 +25,21 @@ final class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/{tag}', name: 'app_offer_tag')]
+    public function getOffersByTag(EntityManagerInterface $entity_manager, SerializerInterface $serializer): Response
+    {
+        if ($tag !== "") {
+            $offers = $entity_manager->getRepository(Offer::class)->findByTag($tag);
+        }else {
+            $offers = $entity_manager->getRepository(Offer::class)->findAll();
+        }
+
+        return $this->render('admin/index.html.twig', [
+            'offers' => $offers
+        ]);
+
+    } 
+
     #[Route('/add-offer', name: 'app_add_offer')]
     public function addOffer(EntityManagerInterface $entity_manager, Request $request): Response
     {

@@ -16,6 +16,15 @@ class OfferRepository extends ServiceEntityRepository
         parent::__construct($registry, Offer::class);
     }
 
+    public function findByTag($tag): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.tags LIKE :tag')
+            ->setParameter('tag', "%".$tag."%")
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Offer[] Returns an array of Offer objects
     //     */
