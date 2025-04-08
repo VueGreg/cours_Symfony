@@ -205,7 +205,7 @@ final class ApiController extends AbstractController
         $candidacy = new Candidacy();
         $message = $request->request->get('message');
         $candidacy->setMessage($message);
-        $candidacy->setOffer($entity_manager->getRepository(Offer::class)->find(11));
+        $candidacy->setOffer($entity_manager->getRepository(Offer::class)->find(1));
 
         $file = $request->files->get('file');
 
