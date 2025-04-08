@@ -213,7 +213,7 @@ final class ApiController extends AbstractController
             return new JsonResponse(['error' => 'Aucun fichier reçu'], HttpFoundationResponse::HTTP_BAD_REQUEST);
         }
 
-        $uploadDir = $this->getParameter('kernel.project_dir') . 'var/uploads/cv';
+        $uploadDir = $this->getParameter('kernel.project_dir') . 'var';
 
         $newFileName = uniqid() . '.' . $file->guessExtension();
 
