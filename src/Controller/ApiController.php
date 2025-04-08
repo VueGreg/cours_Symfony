@@ -6,6 +6,8 @@ use ApiPlatform\OpenApi\Model\Response;
 use App\Entity\Candidacy;
 use App\Entity\Offer;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -139,13 +141,31 @@ final class ApiController extends AbstractController
 
     #[OA\Tag(name: 'Candidacies')]
     #[Route('/candidacies', name: 'list_candidacies', methods:['GET'])]
-    public function getCandidacies(EntityManagerInterface $entity_manager, SerializerInterface $serializer): JsonResponse
+    public function getCandidacies(Request $request, EntityManagerInterface $entity_manager, SerializerInterface $serializer, PaginatorInterface $paginator): JsonResponse
     {
-        $candidacies = $entity_manager->getRepository(Candidacy::class)->findAll();
+        
+        $query = $entity_manager->getRepository(Candidacy::class)->createQueryBuilder('c')->getQuery();
 
-        $data = $serializer->serialize($candidacies, 'json', ['groups' => 'candidacy:read']);
+        $page = $request->query->getInt('page', 1);
 
-        return new JsonResponse($data, 200, [], true);
+        $pagination = $paginator->paginate(
+            $query,
+            $page,
+            5
+        );
+
+        return new JsonResponse([
+            'totalItems' => $pagination->getTotalItemCount(),
+            'currentPage' => $page,
+            'totalPages' => ceil($pagination->getTotalItemCount() / 5),
+            'items' => json_decode($serializer->serialize($pagination->getItems(), 'json', ['groups' => 'candidacy:read']))
+        ]);
+
+        //$candidacies = $entity_manager->getRepository(Candidacy::class)->findAll();
+
+        //$data = $serializer->serialize($candidacies, 'json', ['groups' => 'candidacy:read']);
+
+        //return new JsonResponse($data, 200, [], true);
 
     }
 
