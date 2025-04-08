@@ -19,7 +19,7 @@ class OfferRepository extends ServiceEntityRepository
     public function findByTag($tag): array
     {
         return $this->createQueryBuilder('o')
-            ->where('o.tags LIKE :tag')
+            ->where('o.tag LIKE :tag')
             ->setParameter('tag', "%".$tag."%")
             ->getQuery()
             ->getResult();
