@@ -215,7 +215,7 @@ final class ApiController extends AbstractController
 
         $uploadDir = $this->getParameter('kernel.project_dir') . 'var/uploads/cv';
 
-        $newFileName = uniqid() . '.' . $file->guessExtention();
+        $newFileName = uniqid() . '.' . $file->guessExtension();
 
         try {
             $file->move($uploadDir, $newFileName);
